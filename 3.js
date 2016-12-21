@@ -1,10 +1,10 @@
 /**
  * Created by gerassum on 21.12.16.
  */
-var d = 40;
+var d = 5;
 var cols, rows;
 var snake, food;
-var fr = 10;
+var fr = 20;
 
 function setup() {
     createCanvas(800, 800);
@@ -45,10 +45,12 @@ function Snake() {
 
     this.setDirection = function (direction) {
         if (this.direction.x + direction.x == 0 || this.direction.y + direction.y == 0) {
-            return;
+            return false;
         } else {
             this.direction = direction;
         }
+
+        return true;
     };
 
 
@@ -72,13 +74,6 @@ function Snake() {
 
         var head = this.body[0];
 
-        if (this.eatenFood[0] && this.body[this.body.length - 1].x == this.eatenFood[0].x && this.body[this.body.length - 1].y == this.eatenFood[0].y) {
-            this.eatenFood.shift();
-        } else {
-            this.body.pop();
-            console.log('Not grow');
-        }
-
         var newHead = {
             x: head.x + this.direction.x,
             y: head.y + this.direction.y
@@ -100,6 +95,12 @@ function Snake() {
             newHead.y += rows;
         }
 
+        if (this.eatenFood[0] && this.body[this.body.length - 1].x == this.eatenFood[0].x && this.body[this.body.length - 1].y == this.eatenFood[0].y) {
+            this.eatenFood.shift();
+        } else {
+            this.body.pop();
+        }
+
         this.checkSelfCollision(newHead);
 
         this.body.unshift(newHead);
@@ -107,7 +108,7 @@ function Snake() {
         if (this.body[0].x == food.x && this.body[0].y == food.y) {
             this.eatenFood.push(food);
             food = new Food();
-            frameRate(fr++);
+            // frameRate(fr++);
         }
     }
 }
