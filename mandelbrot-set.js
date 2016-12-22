@@ -23,7 +23,7 @@ function draw() {
                 var newA = a * a - b * b;
                 var newB = 2 * a * b;
 
-                if(abs(newA + newB) > 8) {
+                if(abs(newA + newB) > 16) {
                     break;
                 }
 
