@@ -7,6 +7,7 @@ var iterations = 100;
 function setup() {
     createCanvas(800, 800);
     frameRate(2);
+    pixelDensity(1);
     slider = createSlider(0,maxScale, maxScale, 0.01)
 }
 
