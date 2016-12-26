@@ -6,7 +6,7 @@ var bullets = [];
 var bulletsBuffer = [];
 var asteroids = [];
 var asteroidsBuffer = [];
-var asteroidsInitialCount = 4;
+var asteroidsInitialCount = 6;
 var asteroidSizes = [200, 150, 130, 50];
 
 function setup() {
@@ -51,7 +51,9 @@ function draw() {
     for (var j = 0; j < asteroids.length; j++) {
         if (asteroids[j].valid) {
             asteroidsBuffer.push(asteroids[j]);
-        } else {
+        }
+
+        if (asteroids[j].split) {
             asteroidsBuffer.push(new Asteroid(
                 asteroids[j].pos.x,
                 asteroids[j].pos.y,
@@ -93,6 +95,7 @@ function draw() {
             ) {
                 bullets[i].valid = false;
                 asteroids[j].valid = false;
+                asteroids[j].split = true;
             }
         }
     }
@@ -218,10 +221,13 @@ function Asteroid(x, y, size) {
     this.pos = createVector(x, y);
     this.speed = random(2, 3);
     this.angle = random(0, TWO_PI);
+    this.valid = true;
+    this.split = false;
+    console.log('Create new asteroid');
 
-
-
-    this.valid = asteroidSizes[this.size] != undefined;
+    if (asteroidSizes[this.size] == undefined) {
+        this.valid = false;
+    }
 
     this.render = function () {
         noFill();
