@@ -60,8 +60,8 @@ function draw() {
                 asteroids[j].size + 1
             ));
             asteroidsBuffer.push(new Asteroid(
-                asteroids[j].pos.x,
-                asteroids[j].pos.y,
+                asteroids[j].pos.x + asteroidSizes[asteroids[j].size + 1],
+                asteroids[j].pos.y + asteroidSizes[asteroids[j].size + 1],
                 asteroids[j].size + 1
             ));
         }
@@ -112,7 +112,7 @@ function keyPressed() {
     //     canon.increaseAngle();
     // } else if (keyCode === RIGHT_ARROW) {
     //     canon.decreaseAngle();
-    if (keyCode === CONTROL) {
+    if (keyCode === 32) {
         canon.shoot();
     }
 }
@@ -217,13 +217,21 @@ function Bullet(x, y, angle, initialSpeed) {
 
 function Asteroid(x, y, size) {
     this.size = size;
-
+    this.shape = [];
     this.pos = createVector(x, y);
     this.speed = random(2, 3);
     this.angle = random(0, TWO_PI);
     this.valid = true;
     this.split = false;
-    console.log('Create new asteroid');
+
+    var alpha = 0;
+    while (alpha < TWO_PI) {
+        alpha += random(0, PI / 6);
+        this.shape.push([
+            alpha,
+            random(asteroidSizes[this.size] / 2 * 0.75, asteroidSizes[this.size] / 2)
+        ]);
+    }
 
     if (asteroidSizes[this.size] == undefined) {
         this.valid = false;
@@ -232,8 +240,13 @@ function Asteroid(x, y, size) {
     this.render = function () {
         noFill();
         stroke(255);
-
-        ellipse(this.pos.x, this.pos.y, asteroidSizes[this.size]);
+        beginShape();
+        for (var i = 0; i < this.shape.length; i++) {
+            // vertex(this.pos.x + this.shape[i].x, this.pos.y + this.shape[i].y);
+            vertex(this.pos.x + cos(this.shape[i][0]) * this.shape[i][1], this.pos.y - sin(this.shape[i][0]) * this.shape[i][1]);
+        }
+        endShape(CLOSE);
+        // ellipse(this.pos.x, this.pos.y, asteroidSizes[this.size]);
 
         // rect(
         //     this.pos.x - asteroidSizes[this.size][0] / 2,
