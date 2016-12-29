@@ -2,99 +2,138 @@
  * Created by gerassum on 28.12.16.
  */
 var fireworks = [];
-var fireworksLimit = 10;
-var particlesLimit = 100;
-var particlesMaxLifetime = 70;
+// var particlesLimit = 100;
+// var particlesMaxLifetime = 70;
 
 function setup() {
-    createCanvas(600, 600);
-    // for (var i = 1; i < fireworksLimit; i++) {
+    createCanvas(1200, 600);
+    colorMode(HSB);
+    // for (var i = 1; i <= 30; i++) {
     //     fireworks.push(new Firework());
     // }
 }
 
 function draw() {
     background(0);
-    colorMode(HSB);
-    if(random(1) < 0.1) {
+    if (random(1) < 0.05) {
         fireworks.push(new Firework());
     }
-    for (var i = 0; i < fireworks.length; i++) {
-        fireworks[i].applyForce(fireworks[i].g);
-        fireworks[i].render();
+    for (var i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].draw();
+        fireworks[i].update();
+
+        if (!fireworks[i].hasSomethingToShow()) {
+            fireworks.splice(i, 1);
+        }
     }
 }
 
 function Firework() {
+    this.bodyD = 5;
+    this.maxBodySpeed = 7;
+    this.minBodySpeed = 4;
+    this.color = floor(random(255));
+    this.body = new Particle(
+        random(30, width - 30), height - 1, 0,
+        random(-this.maxBodySpeed, -this.minBodySpeed)
+    );
+    this.body.setColor(this.color);
+    this.body.draw = function (bodyD) {
+        noStroke();
+        fill(this.color, 255, 255);
+        ellipse(this.p.x, this.p.y, bodyD, bodyD);
+    };
+
+
+
     this.particles = [];
+    this.particlesLimit = 100;
+    // in frames
+    this.particleMaxLifetime = 60;
+    this.particleMaxSpeed = 2;
     this.g = createVector(0, 0.05);
-    this.p = createVector(random(0, width), height - 1);
-    this.v = createVector(0, -random(3, 7));
-    this.dv = createVector(0, 0);
-    this.r = 4;
-    this.isFired = false;
-    this.hu = floor(random(0, 255));
-
-    this.applyForce = function (force) {
-        this.dv.add(force);
-    };
-
-    this.render = function () {
-        if(!this.isFired) {
-            fill(this.hu, 255, 255);
-            ellipse(this.p.x, this.p.y, this.r, this.r);
-            this.update();
-        } else {
-            for (var i = 0; i < this.particles.length; i++) {
-                this.particles[i].render();
-                this.particles[i].applyForce(this.g);
-                this.particles[i].applyForce(this.particles[i].force);
-                this.particles[i].update();
-            }
-        }
-    };
 
     this.update = function () {
-        this.v.add(this.dv);
-        this.p.add(this.v);
-        this.dv.mult(0);
-        if(this.v.y >= 0) {
-            this.isFired = true;
-
-            for (var i = 1; i < particlesLimit; i++) {
-                this.particles.push(new Particle(this.p.x, this.p.y, this.hu));
+        if (this.body) {
+            this.body.applyForce(this.g);
+            this.body.update();
+            if (this.body.v.y > 0) {
+                for (var i = 0; i < this.particlesLimit; i++) {
+                    var randomSpeed = p5.Vector.random2D().mult(random(this.particleMaxSpeed));
+                    this.particles.push(new Particle(this.body.p.x, this.body.p.y, randomSpeed.x, randomSpeed.y));
+                    this.particles[i].setLifetime(floor(random(this.particleMaxLifetime * 0.5, this.particleMaxLifetime)));
+                    this.particles[i].setColor(this.color);
+                    this.particles[i].draw = function(){
+                        var b = map(this.lifeTime, 0, this.initialLifetime, 0, 255);
+                        stroke(this.color, 255, b);
+                        point(this.p.x, this.p.y);
+                    }
+                }
+                this.body = null;
+            }
+        } else if (this.particles.length > 0) {
+            for (var i = this.particles.length - 1; i >= 0; i--) {
+                if (this.particles[i].isAlive()) {
+                    this.particles[i].applyForce(this.g);
+                    this.particles[i].update();
+                    this.particles[i].lifeGoesOn();
+                } else {
+                    this.particles.splice(i, 1);
+                }
             }
         }
+    };
+
+    this.draw = function () {
+        if (this.body) {
+            this.body.draw(this.bodyD);
+        } else {
+            for (var i = 0; i < this.particles.length; i++) {
+                this.particles[i].draw();
+            }
+        }
+    };
+
+    this.hasSomethingToShow = function () {
+        return (this.body !== null || this.particles.length > 0);
     }
 }
 
-function Particle(x, y, hu) {
-    this.hu = hu;
-    this.force = createVector(0, 0);
+function Particle(x, y, vx, vy) {
     this.p = createVector(x, y);
-    // this.v = createVector(random(-0.5,0.5), -random(1,2));
-    this.v = p5.Vector.random2D().mult(random(0.5, 1));
-    this.dv = createVector(0, 0);
-    this.life = 0;
-    this.lifeTime = random(particlesMaxLifetime * 0.4, particlesMaxLifetime);
+    this.v = createVector(vx, vy);
+    this.a = createVector(0, 0);
 
-    this.applyForce = function (force) {
-        this.dv.add(force);
-    };
-
-    this.render = function () {
-        if(this.life < this.lifeTime) {
-            stroke(this.hu, 255, map(this.life, 0, this.lifeTime, 255, 0));
-            point(this.p.x, this.p.y);
-            noStroke();
-            this.update();
-            this.life++;
-        }
+    this.applyForce = function (vector) {
+        this.a.add(vector);
     };
 
     this.update = function () {
-        this.v.add(this.dv);
+        this.v.add(this.a);
         this.p.add(this.v);
-        this.dv.mult(0);
+        this.a.mult(0);
+    };
+
+    // this.draw = function () {
+    //     var b = map(this.lifeTime, 0, this.initialLifetime, 0, 255);
+    //     stroke(this.color, 255, 255);
+    //     point(this.p.x, this.p.y);
+    // };
+
+    this.setLifetime = function (lifeTime) {
+        this.initialLifetime = lifeTime;
+        this.lifeTime = lifeTime;
+    };
+
+    this.lifeGoesOn = function () {
+        this.lifeTime--;
+    };
+
+    this.isAlive = function () {
+        return this.lifeTime > 0;
+    };
+
+    this.setColor = function (color) {
+        this.color = color;
     }
 }
