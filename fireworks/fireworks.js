@@ -2,8 +2,6 @@
  * Created by gerassum on 28.12.16.
  */
 var fireworks = [];
-// var particlesLimit = 100;
-// var particlesMaxLifetime = 70;
 
 function setup() {
     createCanvas(1200, 600);
@@ -15,17 +13,20 @@ function setup() {
 
 function draw() {
     background(0);
-    if (random(1) < 0.05) {
+    // if (random(1) < 0.03) {
+    //     fireworks.push(new Firework());
+    // }
+    if (fireworks.length < 1) {
         fireworks.push(new Firework());
     }
-    for (var i = fireworks.length - 1; i >= 0; i--) {
-        fireworks[i].draw();
-        fireworks[i].update();
+        for (var i = fireworks.length - 1; i >= 0; i--) {
+            fireworks[i].draw();
+            fireworks[i].update();
 
-        if (!fireworks[i].hasSomethingToShow()) {
-            fireworks.splice(i, 1);
+            if (!fireworks[i].hasSomethingToShow()) {
+                fireworks.splice(i, 1);
+            }
         }
-    }
 }
 
 function Firework() {
@@ -45,12 +46,11 @@ function Firework() {
     };
 
 
-
     this.particles = [];
-    this.particlesLimit = 100;
+    this.particlesLimit = 500;
     // in frames
-    this.particleMaxLifetime = 60;
-    this.particleMaxSpeed = 2;
+    this.particleMaxLifetime = 30;
+    this.particleMaxSpeed = 7;
     this.g = createVector(0, 0.05);
 
     this.update = function () {
@@ -61,9 +61,9 @@ function Firework() {
                 for (var i = 0; i < this.particlesLimit; i++) {
                     var randomSpeed = p5.Vector.random2D().mult(random(this.particleMaxSpeed));
                     this.particles.push(new Particle(this.body.p.x, this.body.p.y, randomSpeed.x, randomSpeed.y));
-                    this.particles[i].setLifetime(floor(random(this.particleMaxLifetime * 0.5, this.particleMaxLifetime)));
+                    this.particles[i].setLifetime(floor(random(this.particleMaxLifetime * 0.1, this.particleMaxLifetime)));
                     this.particles[i].setColor(this.color);
-                    this.particles[i].draw = function(){
+                    this.particles[i].draw = function () {
                         var b = map(this.lifeTime, 0, this.initialLifetime, 0, 255);
                         stroke(this.color, 255, b);
                         point(this.p.x, this.p.y);
