@@ -65,25 +65,26 @@ function setup() {
 }
 
 function draw() {
-    if(movesLeft) {
-        background(51);
-        for (var j = 0; j < rows; j++) {
-            for (var i = 0; i < colls; i++) {
-                fill(colors[field[i][j]]);
-                noStroke();
-                rectMode(CORNER);
-                rect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
-                fill(0);
-                textSize(50);
-                textAlign(CENTER, CENTER);
-                rectMode(RADIUS);
 
-                if (field[i][j] > 0) {
-                    text(Math.pow(2, field[i][j]), (j) * cellWidth, (i) * cellHeight, cellWidth, cellHeight)
-                }
+    background(51);
+    for (var j = 0; j < rows; j++) {
+        for (var i = 0; i < colls; i++) {
+            fill(colors[field[i][j]]);
+            noStroke();
+            rectMode(CORNER);
+            rect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+            fill(0);
+            textSize(50);
+            textAlign(CENTER, CENTER);
+            rectMode(RADIUS);
+
+            if (field[i][j] > 0) {
+                text(Math.pow(2, field[i][j]), (j) * cellWidth, (i) * cellHeight, cellWidth, cellHeight)
             }
         }
-    } else {
+    }
+
+    if(!movesLeft) {
         fill(0);
         textSize(150);
         textAlign(CENTER, CENTER);
