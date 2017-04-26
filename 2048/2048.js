@@ -8,6 +8,13 @@ var field = [
     [0, 0, 0, 0],
 ];
 
+// var field = [
+//     [1, 2, 1, 2],
+//     [2, 1, 2, 1],
+//     [1, 2, 1, 2],
+//     [2, 1, 2, 1],
+// ];
+
 var emptyField = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
@@ -53,25 +60,35 @@ function setup() {
     cellWidth = width / 4;
     cellHeight = height / 4;
     spawnNew(2);
+
+    movesLeft = isMovesLeft();
 }
 
 function draw() {
-    background(51);
-    for (var j = 0; j < rows; j++) {
-        for (var i = 0; i < colls; i++) {
-            fill(colors[field[i][j]]);
-            noStroke();
-            rectMode(CORNER);
-            rect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
-            fill(0);
-            textSize(50);
-            textAlign(CENTER, CENTER);
-            rectMode(RADIUS);
+    if(movesLeft) {
+        background(51);
+        for (var j = 0; j < rows; j++) {
+            for (var i = 0; i < colls; i++) {
+                fill(colors[field[i][j]]);
+                noStroke();
+                rectMode(CORNER);
+                rect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+                fill(0);
+                textSize(50);
+                textAlign(CENTER, CENTER);
+                rectMode(RADIUS);
 
-            if (field[i][j] > 0) {
-                text(Math.pow(2, field[i][j]), (j) * cellWidth, (i) * cellHeight, cellWidth, cellHeight)
+                if (field[i][j] > 0) {
+                    text(Math.pow(2, field[i][j]), (j) * cellWidth, (i) * cellHeight, cellWidth, cellHeight)
+                }
             }
         }
+    } else {
+        fill(0);
+        textSize(150);
+        textAlign(CENTER, CENTER);
+        rectMode(RADIUS);
+        text("GAME OVER", 0, 0, width, height)
     }
 }
 
@@ -139,6 +156,8 @@ function move(moveName) {
 
     field = newField;
     spawnNew(floor(random(2)) + 1);
+
+    movesLeft = isMovesLeft();
 }
 
 function moveCell(j, i, moveDirection, newField) {
@@ -162,6 +181,48 @@ function moveCell(j, i, moveDirection, newField) {
     }
 }
 
+function isMovesLeft() {
+    var isMovesLeft = false;
+
+    for (var j = 0; j < rows; j++) {
+        for (var i = 0; i < rows; i++) {
+            if (field[j - 1] !== undefined) {
+                if (field[i] !== undefined) {
+                    if (field[j][i] === field[j - 1][i] || field[j - 1][i] === 0) {
+                        isMovesLeft = true;
+                    }
+                }
+            }
+
+            if (field[j + 1] !== undefined) {
+                if (field[i] !== undefined) {
+                    if (field[j][i] === field[j + 1][i] || field[j + 1][i] === 0) {
+                        isMovesLeft = true;
+                    }
+                }
+            }
+
+            if (field[j] !== undefined) {
+                if (field[i + 1] !== undefined) {
+                    if (field[j][i] === field[j][i + 1] || field[j][i + 1] === 0) {
+                        isMovesLeft = true;
+                    }
+                }
+            }
+
+            if (field[j] !== undefined) {
+                if (field[i - 1] !== undefined) {
+                    if (field[j][i] === field[j][i - 1] || field[j][i - 1] === 0) {
+                        isMovesLeft = true;
+                    }
+                }
+            }
+
+        }
+    }
+
+    return isMovesLeft;
+}
 Array.prototype.clone = function () {
     var arr = this.slice(0);
     for (var i = 0; i < this.length; i++) {
