@@ -2,7 +2,7 @@
  * Created by gerassum on 26.04.17.
  */
 
-field = new Field(800, 800);
+field = new Field(400, 400);
 
 function keyPressed() {
     if (keyCode === BACKSPACE) {
@@ -19,12 +19,14 @@ function keyPressed() {
 }
 
 function setup() {
-    createCanvas(field.fieldWidht, field.fieldHeight);
+    createCanvas(900, 400);
     field.init(false);
 }
 
 function draw() {
-    field.draw()
+    background(51);
+    field.draw(0);
+    field.draw(500)
 }
 
 function Field(fieldWidth, fieldHeight) {
@@ -60,20 +62,24 @@ function Field(fieldWidth, fieldHeight) {
         }
     };
 
-    this.draw = function () {
+    this.draw = function (yOffset) {
+        if(yOffset === undefined) {
+            yOffset = 0;
+        }
+
         for (var i = 0; i < this.rows; i++) {
             for (var j = 0; j < this.cols; j++) {
                 fill(this.field[i][j].getColor());
                 noStroke();
                 rectMode(CORNER);
-                rect(j * this.cellWidth, i * this.cellHeight,
+                rect(j * this.cellWidth + yOffset, i * this.cellHeight,
                     this.cellWidth, this.cellHeight);
                 fill(this.field[i][j].getTextColor());
-                textSize(50);
+                textSize(30);
                 textAlign(CENTER, CENTER);
                 rectMode(RADIUS);
                 if (this.field[i][j].val > 0) {
-                    text(this.field[i][j].getText(), j * this.cellWidth, i * this.cellHeight,
+                    text(this.field[i][j].getText(), j * this.cellWidth + yOffset, i * this.cellHeight,
                         this.cellWidth, this.cellHeight)
                 }
             }
@@ -81,10 +87,10 @@ function Field(fieldWidth, fieldHeight) {
 
         if(!this.hasMoves) {
             fill(0);
-            textSize(150);
+            textSize(70);
             textAlign(CENTER, CENTER);
             rectMode(RADIUS);
-            text("GAME OVER", 0, 0, this.fieldWidht, this.fieldHeight)
+            text("GAME OVER", yOffset, 0, this.fieldWidht, this.fieldHeight)
         }
     };
 
