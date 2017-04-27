@@ -155,8 +155,16 @@ function move(moveName) {
         }
     }
 
-    field = newField;
-    spawnNew(floor(random(2)) + 1);
+    for (j = 0; j < rows; j++) {
+        for (i = 0; i < rows; i++) {
+            if(field[j][i] !== newField[j][i]) {
+                // something actually moved
+
+                field = newField;
+                spawnNew(floor(random(2)) + 1);
+            }
+        }
+    }
 
     movesLeft = isMovesLeft();
 }
