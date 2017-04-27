@@ -3,11 +3,10 @@
  */
 
 field = new Field(400, 400);
+field1 = new Field(400, 400);
 
 function keyPressed() {
-    if (keyCode === BACKSPACE) {
-        spawnNew();
-    } else if (keyCode === UP_ARROW) {
+    if (keyCode === UP_ARROW) {
         field.move(createVector(-1, 0));
     } else if (keyCode === DOWN_ARROW) {
         field.move(createVector(1, 0));
@@ -16,17 +15,28 @@ function keyPressed() {
     } else if (keyCode === RIGHT_ARROW) {
         field.move(createVector(0, 1));
     }
+
+    if (keyCode === 87) {
+        field1.move(createVector(-1, 0));
+    } else if (keyCode === 83) {
+        field1.move(createVector(1, 0));
+    } else if (keyCode === 65) {
+        field1.move(createVector(0, -1));
+    } else if (keyCode === 68) {
+        field1.move(createVector(0, 1));
+    }
 }
 
 function setup() {
     createCanvas(900, 400);
     field.init(false);
+    field1.init(false);
 }
 
 function draw() {
     background(51);
     field.draw(0);
-    field.draw(500)
+    field1.draw(500)
 }
 
 function Field(fieldWidth, fieldHeight) {
