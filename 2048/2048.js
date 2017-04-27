@@ -66,14 +66,14 @@ function Field(fieldWidth, fieldHeight) {
                 fill(this.field[i][j].getColor());
                 noStroke();
                 rectMode(CORNER);
-                rect(j * this.cellHeight, i * this.cellWidth,
+                rect(j * this.cellWidth, i * this.cellHeight,
                     this.cellWidth, this.cellHeight);
                 fill(0);
                 textSize(50);
                 textAlign(CENTER, CENTER);
                 rectMode(RADIUS);
                 if (this.field[i][j].val > 0) {
-                    text(this.field[i][j].getText(), j * this.cellHeight, i * this.cellWidth,
+                    text(this.field[i][j].getText(), j * this.cellWidth, i * this.cellHeight,
                         this.cellWidth, this.cellHeight)
                 }
             }
