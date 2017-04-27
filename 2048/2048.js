@@ -68,7 +68,7 @@ function Field(fieldWidth, fieldHeight) {
                 rectMode(CORNER);
                 rect(j * this.cellWidth, i * this.cellHeight,
                     this.cellWidth, this.cellHeight);
-                fill(0);
+                fill(this.field[i][j].getTextColor());
                 textSize(50);
                 textAlign(CENTER, CENTER);
                 rectMode(RADIUS);
@@ -219,21 +219,21 @@ function Cell(value) {
     this.acceptMerge = true;
 
     this.colorPalette = [
-        '#000000',
-        '#0000FF',
-        '#FF00FF',
-        '#FFFF00',
-        '#008000',
-        '#00FF00',
-        '#800000',
-        '#000080',
-        '#808000',
-        '#800080',
-        '#FF0000',
+        new Color('#000000', '#000000'),
+        new Color('#1E90FF', '#000000'),
+        new Color('#FF00FF', '#000000'),
+        new Color('#FFD700', '#000000'),
+        new Color('#008000', '#000000'),
+        new Color('#98FB98', '#000000'),
+        new Color('#FF8C00', '#000000'),
+        new Color('#DC143C', '#000000'),
+        new Color('#808000', '#000000'),
+        new Color('#800080', '#000000'),
+        new Color('#FF0000', '#000000'),
     ];
 
     this.getColor = function () {
-        return this.colorPalette[this.val];
+        return this.colorPalette[this.val].cellColor;
     };
 
     this.setVal = function (value) {
@@ -246,5 +246,14 @@ function Cell(value) {
 
     this.isEmpty = function () {
         return !this.val > 0;
+    };
+
+    this.getTextColor = function () {
+        return this.colorPalette[this.val].textColor;
     }
+}
+
+function Color(cellColor, textColor) {
+    this.cellColor = cellColor;
+    this.textColor = textColor;
 }
