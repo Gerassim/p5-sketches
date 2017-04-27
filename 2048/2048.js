@@ -31,6 +31,7 @@ function Field(fieldWidth, fieldHeight) {
     this.field = [];
     this.rows = 4;
     this.cols = 4;
+    this.hasMoves = true;
 
     this.fieldWidht = fieldWidth;
     this.fieldHeight = fieldHeight;
@@ -76,6 +77,14 @@ function Field(fieldWidth, fieldHeight) {
                         this.cellWidth, this.cellHeight)
                 }
             }
+        }
+
+        if(!this.hasMoves) {
+            fill(0);
+            textSize(150);
+            textAlign(CENTER, CENTER);
+            rectMode(RADIUS);
+            text("GAME OVER", 0, 0, this.fieldWidht, this.fieldHeight)
         }
     };
 
@@ -136,10 +145,29 @@ function Field(fieldWidth, fieldHeight) {
         if (counter > 0) {
             this.spawnNew(floor(random(2)) + 1);
         }
+
+        this.hasMoves = this.hasMovesLeft();
     };
 
     this.hasMovesLeft = function () {
+        var moves = [
+            createVector(-1, 0),
+            createVector(1, 0),
+            createVector(0, -1),
+            createVector(0, 1)
+        ];
 
+        for (var i = 0; i < this.rows; i++) {
+            for (var j = 0; j < this.cols; j++) {
+                for (var k = 0; k < moves.length; k++) {
+                    if(this.canMove(createVector(i, j), moves[k])) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     };
 
     this.resetMergeConditions = function () {
@@ -181,7 +209,6 @@ function Field(fieldWidth, fieldHeight) {
             this.field[initial.x][initial.y].acceptMerge = false;
         } else {
             this.field[initial.x][initial.y].val = this.field[initialX][initialY].val;
-            this.field[initial.x][initial.y].acceptMerge = false;
             this.field[initialX][initialY].val = 0;
         }
     }
