@@ -159,7 +159,7 @@ function Field(fieldWidth, fieldHeight) {
 
         this.resetMergeConditions();
         if (counter > 0) {
-            this.spawnNew(floor(random(2)) + 1);
+            this.spawnNew(1);
         }
 
         this.hasMoves = this.hasMovesLeft();
