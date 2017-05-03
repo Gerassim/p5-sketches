@@ -1,0 +1,11 @@
+{
+  "name": "2048-ws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ws.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^2.3.1"
+  }
+}
