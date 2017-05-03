@@ -1,38 +1,19 @@
-function Cell(value) {
-    this.val = value;
-    this.acceptMerge = true;
+'use strict';
 
-    this.colorPalette = [
-        new Color('#000000', '#000000'),
-        new Color('#1E90FF', '#000000'),
-        new Color('#FF00FF', '#000000'),
-        new Color('#FFD700', '#000000'),
-        new Color('#008000', '#000000'),
-        new Color('#98FB98', '#000000'),
-        new Color('#FF8C00', '#000000'),
-        new Color('#DC143C', '#000000'),
-        new Color('#808000', '#000000'),
-        new Color('#800080', '#000000'),
-        new Color('#FF0000', '#000000'),
-    ];
+class Cell {
 
-    this.getColor = function () {
-        return this.colorPalette[this.val].cellColor;
-    };
+    constructor(value) {
+        this.val = value;
+        this.acceptMerge = true;
+    }
 
-    this.setVal = function (value) {
+    setVal(value) {
         this.val = value;
     };
 
-    this.getText = function () {
-        return Math.pow(2, this.val);
-    };
-
-    this.isEmpty = function () {
+    isEmpty() {
         return !this.val > 0;
     };
-
-    this.getTextColor = function () {
-        return this.colorPalette[this.val].textColor;
-    }
 }
+
+module.exports = Cell;
