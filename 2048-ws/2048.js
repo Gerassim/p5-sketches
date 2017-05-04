@@ -1,4 +1,4 @@
-let fields = {}, connectionId;
+let fields = {}, playerId, roomId;
 let socket = new WebSocket("ws://node.dev:81");
 
 socket.onmessage = function (ev) {
@@ -10,12 +10,17 @@ socket.onmessage = function (ev) {
         }
     }
 
-    if(data.connectionId !== undefined) {
-        connectionId = data.connectionId;
+    if(data.playerId !== undefined) {
+        playerId = data.playerId;
     }
 
     if(data.delete !== undefined) {
         delete fields[data.delete];
+    }
+
+    if(data.roomId !== undefined) {
+        roomId = data.roomId;
+        console.log(roomId);
     }
 };
 
@@ -27,7 +32,7 @@ function draw() {
     background(51);
 
     for(let i in fields) {
-        if(i == connectionId) {
+        if(i == playerId) {
             fields[i].draw();
         } else {
             fields[i].draw(500);
