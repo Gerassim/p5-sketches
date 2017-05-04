@@ -1,18 +1,37 @@
-let field;
+let fields = {}, connectionId;
 let socket = new WebSocket("ws://node.dev:81");
 
 socket.onmessage = function (ev) {
-    field = new Field(JSON.parse(ev.data));
+    let data = JSON.parse(ev.data);
+
+    if(data.fields !== undefined) {
+        for (let id in data.fields) {
+            fields[id] = new Field(data.fields[id]);
+        }
+    }
+
+    if(data.connectionId !== undefined) {
+        connectionId = data.connectionId;
+    }
+
+    if(data.delete !== undefined) {
+        delete fields[data.delete];
+    }
 };
 
 function setup() {
-    createCanvas(400, 400);
+    createCanvas(900, 400);
 }
 
 function draw() {
     background(51);
-    if(field !== undefined) {
-        field.draw();
+
+    for(let i in fields) {
+        if(i == connectionId) {
+            fields[i].draw();
+        } else {
+            fields[i].draw(500);
+        }
     }
 }
 
@@ -38,33 +57,38 @@ function Field(object) {
     this.fieldWidht = 400;
     this.fieldHeight = 400;
 
-    for (let i = 0; i < object.length; i++) {
+    for (let i = 0; i < object.field.length; i++) {
         this.field[i] = [];
-        for (let j = 0; j < object[i].length; j++) {
-            // console.log(object[i][j]);
-            this.field[i][j] = new Cell(object[i][j]);
+        for (let j = 0; j < object.field[i].length; j++) {
+            this.field[i][j] = new Cell(object.field[i][j]);
         }
     }
-    this.cols = 4;
-    this.rows = 4;
+
+    this.cols = object.cols;
+    this.rows = object.rows;
 
     this.cellWidth = 400 / this.cols;
     this.cellHeight = 400 / this.rows;
 
-    this.draw = function () {
-        for (let i = 0; i < object.length; i++) {
-            for (let j = 0; j < object[i].length; j++) {
+    this.draw = function (yOffset) {
+
+        if(yOffset === undefined) {
+            yOffset = 0;
+        }
+
+        for (let i = 0; i < this.field.length; i++) {
+            for (let j = 0; j < this.field[i].length; j++) {
                 fill(this.field[i][j].getColor());
                 noStroke();
                 rectMode(CORNER);
-                rect(j * this.cellWidth, i * this.cellHeight,
+                rect(j * this.cellWidth + yOffset, i * this.cellHeight,
                     this.cellWidth, this.cellHeight);
                 fill(this.field[i][j].getTextColor());
                 textSize(30);
                 textAlign(CENTER, CENTER);
                 rectMode(RADIUS);
                 if (this.field[i][j].val > 0) {
-                    text(this.field[i][j].getText(), j * this.cellWidth, i * this.cellHeight,
+                    text(this.field[i][j].getText(), j * this.cellWidth + yOffset, i * this.cellHeight,
                         this.cellWidth, this.cellHeight)
                 }
             }

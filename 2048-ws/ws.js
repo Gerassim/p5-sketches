@@ -6,7 +6,7 @@ const Field = require('./Field');
 const Vector = require('./Vector');
 
 const wss = new WebSocket.Server({port: 8081});
-let field;
+let fields = {};
 
 wss.broadcast = function broadcast(data) {
     wss.clients.forEach(function each(client) {
@@ -17,31 +17,38 @@ wss.broadcast = function broadcast(data) {
 };
 
 wss.on('connection', function connection(ws) {
-    if (field === undefined) {
-        field = new Field();
-    }
+    let date = new Date();
+    ws.id = date.getTime();
 
-    wss.broadcast(JSON.stringify(field.field));
+    fields[ws.id] = new Field();
+
+    ws.send(JSON.stringify({connectionId:ws.id}));
+    wss.broadcast(JSON.stringify({fields: fields}));
 
     ws.on('message', function (data) {
         switch (data) {
             case 'up':
-                field.move(new Vector(-1, 0));
-                console.log('Moving up');
+                fields[ws.id].move(new Vector(-1, 0));
                 break;
             case 'down':
-                field.move(new Vector(1, 0));
-                console.log('Moving down');
+                fields[ws.id].move(new Vector(1, 0));
                 break;
             case 'left':
-                field.move(new Vector(0, -1));
-                console.log('Moving left');
+                fields[ws.id].move(new Vector(0, -1));
                 break;
             case 'right':
-                field.move(new Vector(0, 1));
-                console.log('Moving right');
+                fields[ws.id].move(new Vector(0, 1));
                 break;
         }
-        wss.broadcast(JSON.stringify(field.field));
+
+        let message = JSON.stringify({fields:fields});
+
+        wss.broadcast(message);
+    });
+
+    ws.on("close", function close() {
+        delete fields[ws.id];
+        let message = JSON.stringify({delete:ws.id});
+        wss.broadcast(message);
     });
 });
