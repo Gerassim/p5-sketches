@@ -5,12 +5,10 @@
 
 class Room {
     constructor() {
-        this.limit = 2;
+        this.limit = 3;
         this.players = {};
         let date = new Date();
         this.id = date.getTime();
-        // this.id = roomCounter;
-        // roomCounter++;
     }
 
     addPlayer(player) {

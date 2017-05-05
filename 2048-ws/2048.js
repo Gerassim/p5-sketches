@@ -1,4 +1,4 @@
-let fields = {}, playerId, roomId;
+let fields = {}, playerId, roomId, places = 3;
 let socket = new WebSocket("ws://node.dev:81");
 
 socket.onmessage = function (ev) {
@@ -7,7 +7,7 @@ socket.onmessage = function (ev) {
     if (data.fields !== undefined) {
         for (let id in data.fields) {
             if (fields[id] === undefined) {
-                fields[id] = new Field(data.fields[id]);
+                fields[id] = new Field(data.fields[id], id);
             } else {
                 fields[id].updateField(data.fields[id]);
             }
@@ -31,18 +31,14 @@ socket.onmessage = function (ev) {
 
 function setup() {
     noLoop();
-    createCanvas(900, 500);
+    createCanvas(1400, 500);
 }
 
 function draw() {
     background(51);
 
     for (let i in fields) {
-        if (i == playerId) {
-            fields[i].draw();
-        } else {
-            fields[i].draw(500);
-        }
+        fields[i].draw();
     }
 }
 
@@ -58,9 +54,9 @@ function keyPressed() {
     }
 }
 
-function Field(object) {
+function Field(object, id) {
     this.field = [];
-
+    this.id = id;
     this.fieldWidht = 400;
     this.fieldHeight = 400;
     this.score = object.score;
@@ -71,6 +67,20 @@ function Field(object) {
             this.field[i][j] = new Cell(object.field[i][j]);
         }
     }
+    let place;
+
+    if (playerId == this.id) {
+        place = 0;
+    } else {
+        place = 1;
+        for (let id in fields) {
+            if (fields[id].place === place) {
+                place++;
+            }
+        }
+    }
+
+    this.place = place;
 
     this.cols = object.cols;
     this.rows = object.rows;
@@ -78,11 +88,8 @@ function Field(object) {
     this.cellWidth = this.fieldWidht / this.cols;
     this.cellHeight = this.fieldHeight / this.rows;
 
-    this.draw = function (yOffset) {
-
-        if (yOffset === undefined) {
-            yOffset = 0;
-        }
+    this.draw = function () {
+        let yOffset = this.place * 500;
 
         for (let i = 0; i < this.field.length; i++) {
             for (let j = 0; j < this.field[i].length; j++) {
