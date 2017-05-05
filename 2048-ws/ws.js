@@ -45,23 +45,26 @@ wss.on('connection', function connection(ws) {
     wss.broadcastToRoom(JSON.stringify({fields: ws.room.getFields()}), ws.room.id);
 
     ws.on('message', function (data) {
+        let moved = false;
+
         switch (data) {
             case 'up':
-                ws.player.field.move(new Vector(-1, 0));
+                moved = ws.player.field.move(new Vector(-1, 0));
                 break;
             case 'down':
-                ws.player.field.move(new Vector(1, 0));
+                moved = ws.player.field.move(new Vector(1, 0));
                 break;
             case 'left':
-                ws.player.field.move(new Vector(0, -1));
+                moved = ws.player.field.move(new Vector(0, -1));
                 break;
             case 'right':
-                ws.player.field.move(new Vector(0, 1));
+                moved = ws.player.field.move(new Vector(0, 1));
                 break;
         }
-
-        let message = JSON.stringify({fields: ws.room.getFields()});
-        wss.broadcastToRoom(message, ws.room.id);
+        if(moved) {
+            let message = JSON.stringify({fields: ws.room.getFields()});
+            wss.broadcastToRoom(message, ws.room.id);
+        }
     });
 
     ws.on("close", function close() {

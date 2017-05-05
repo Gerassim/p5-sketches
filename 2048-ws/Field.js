@@ -88,6 +88,8 @@ class Field {
         if (counter > 0) {
             this.spawnNew(1);
         }
+
+        return counter > 0;
     }
 
     canMove(cell, direction) {
