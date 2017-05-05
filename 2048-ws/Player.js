@@ -11,6 +11,7 @@ class Player {
         let date = new Date();
         this.id = date.getTime();
         this.field = new Field();
+        this.name = '';
     }
 
     move(direction) {

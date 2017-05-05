@@ -40,7 +40,7 @@ class Room {
     getFields() {
         let res = {};
         for (let playerId in this.players) {
-            res[playerId] = this.players[playerId].field;
+            res[playerId] = this.players[playerId];
         }
 
         return res;
