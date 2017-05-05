@@ -31,7 +31,7 @@ socket.onmessage = function (ev) {
 
 function setup() {
     noLoop();
-    createCanvas(900, 400);
+    createCanvas(900, 500);
 }
 
 function draw() {
@@ -67,6 +67,7 @@ function Field(object) {
 
     this.fieldWidht = 400;
     this.fieldHeight = 400;
+    this.score = object.score;
 
     for (let i = 0; i < object.field.length; i++) {
         this.field[i] = [];
@@ -104,9 +105,14 @@ function Field(object) {
                 }
             }
         }
-    }
+
+        fill(255);
+
+        text(this.score, 0 + yOffset, this.fieldHeight, this.fieldWidht, this.cellHeight)
+    };
 
     this.updateField = function (object) {
+        this.score = object.score;
         for (let i = 0; i < object.field.length; i++) {
             this.field[i] = [];
             for (let j = 0; j < object.field[i].length; j++) {

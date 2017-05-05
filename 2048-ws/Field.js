@@ -8,6 +8,7 @@ class Field {
         this.rows = 4;
         this.cols = 4;
         this.field = [];
+        this.score = 0;
         this.generateEmpty();
         this.spawnNew(2);
     };
@@ -115,6 +116,7 @@ class Field {
             this.field[cell.x][cell.y].val = 0;
             this.field[newPos.x][newPos.y].val++;
             this.field[newPos.x][newPos.y].acceptMerge = false;
+            this.score = this.score + Math.pow(2, this.field[newPos.x][newPos.y].val);
         } else {
             this.field[newPos.x][newPos.y].val = this.field[cell.x][cell.y].val;
             this.field[cell.x][cell.y].val = 0;
