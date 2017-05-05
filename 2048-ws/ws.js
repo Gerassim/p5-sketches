@@ -10,7 +10,6 @@ const Player = require('./Player');
 
 const wss = new WebSocket.Server({port: 8081});
 
-const fields = {};
 const rooms = new Rooms();
 
 playerCounter = 1;
@@ -62,7 +61,9 @@ wss.on('connection', function connection(ws) {
                 break;
         }
         if(moved) {
-            let message = JSON.stringify({fields: ws.room.getFields()});
+            let field = {};
+            field[ws.player.id] = ws.player.field;
+            let message = JSON.stringify({fields: field});
             wss.broadcastToRoom(message, ws.room.id);
         }
     });
