@@ -21,6 +21,7 @@ socket.onmessage = function (ev) {
 
     if (data.delete !== undefined) {
         delete fields[data.delete];
+        redraw();
     }
 
     if (data.roomId !== undefined) {
