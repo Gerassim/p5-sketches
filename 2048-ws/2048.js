@@ -7,7 +7,8 @@ socket.onmessage = function (ev) {
     if (data.fields !== undefined) {
         for (let id in data.fields) {
             if (fields[id] === undefined) {
-                fields[id] = new Field(data.fields[id], id);
+                fields[id] = new Field(data.fields[id].field, id);
+                fields[id].name = data.fields[id].name;
             } else {
                 fields[id].updateField(data.fields[id]);
             }
@@ -27,11 +28,21 @@ socket.onmessage = function (ev) {
     if (data.roomId !== undefined) {
         roomId = data.roomId;
     }
+
+    if (data.nameChange !== undefined) {
+        fields[data.nameChange.playerId].name = data.nameChange.name;
+        redraw();
+    }
 };
 
 function setup() {
     noLoop();
     createCanvas(1400, 500);
+    button = createButton("Send");
+    button.mousePressed(function () {
+        socket.send(JSON.stringify({name: input.value()}))
+    });
+    input = createInput();
 }
 
 function draw() {
@@ -44,13 +55,13 @@ function draw() {
 
 function keyPressed() {
     if (keyCode === UP_ARROW) {
-        socket.send('up')
+        socket.send(JSON.stringify({move: 'up'}))
     } else if (keyCode === DOWN_ARROW) {
-        socket.send('down')
+        socket.send(JSON.stringify({move: 'down'}))
     } else if (keyCode === LEFT_ARROW) {
-        socket.send('left')
+        socket.send(JSON.stringify({move: 'left'}))
     } else if (keyCode === RIGHT_ARROW) {
-        socket.send('right')
+        socket.send(JSON.stringify({move: 'right'}))
     }
 }
 
@@ -60,6 +71,7 @@ function Field(object, id) {
     this.fieldWidht = 400;
     this.fieldHeight = 400;
     this.score = object.score;
+    this.name = '';
 
     for (let i = 0; i < object.field.length; i++) {
         this.field[i] = [];
@@ -111,10 +123,12 @@ function Field(object, id) {
 
         fill(255);
 
-        text(this.score, 0 + yOffset, this.fieldHeight, this.fieldWidht, this.cellHeight)
+        text(this.name + " " + this.score, 0 + yOffset, this.fieldHeight, this.fieldWidht, this.cellHeight)
     };
 
     this.updateField = function (object) {
+        console.log(object);
+
         this.score = object.score;
         for (let i = 0; i < object.field.length; i++) {
             this.field[i] = [];

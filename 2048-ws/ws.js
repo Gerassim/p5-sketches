@@ -36,14 +36,23 @@ wss.on('connection', function connection(ws) {
     wss.broadcastToRoom(JSON.stringify({fields: ws.room.getFields()}), ws.room.id);
 
     ws.on('message', function (data) {
-        let moved = ws.player.move(data);
+        data = JSON.parse(data);
+        if (data.move !== undefined) {
+            let moved = ws.player.move(data.move);
 
-        if (moved) {
-            let field = {};
-            field[ws.player.id] = ws.player.field;
-            
-            let message = JSON.stringify({fields: field});
-            wss.broadcastToRoom(message, ws.room.id);
+
+            if (moved) {
+                let field = {};
+                field[ws.player.id] = ws.player.field;
+
+                let message = JSON.stringify({fields: field});
+                wss.broadcastToRoom(message, ws.room.id);
+            }
+        }
+
+        if (data.name !== undefined) {
+            ws.player.name = data.name;
+            wss.broadcastToRoom(JSON.stringify({nameChange: {name: data.name, playerId: ws.player.id}}), ws.room.id)
         }
     });
 
