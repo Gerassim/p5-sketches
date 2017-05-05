@@ -6,7 +6,11 @@ socket.onmessage = function (ev) {
 
     if(data.fields !== undefined) {
         for (let id in data.fields) {
-            fields[id] = new Field(data.fields[id]);
+            if(fields[id] === undefined) {
+                fields[id] = new Field(data.fields[id]);
+            } else {
+                fields[id].updateField(data.fields[id]);
+            }
         }
         redraw();
     }
@@ -59,7 +63,7 @@ function keyPressed() {
 
 function Field(object) {
     this.field = [];
-
+    console.log('Field create');
     this.fieldWidht = 400;
     this.fieldHeight = 400;
 
@@ -97,6 +101,15 @@ function Field(object) {
                     text(this.field[i][j].getText(), j * this.cellWidth + yOffset, i * this.cellHeight,
                         this.cellWidth, this.cellHeight)
                 }
+            }
+        }
+    }
+
+    this.updateField = function(object) {
+        for (let i = 0; i < object.field.length; i++) {
+            this.field[i] = [];
+            for (let j = 0; j < object.field[i].length; j++) {
+                this.field[i][j] = new Cell(object.field[i][j]);
             }
         }
     }
