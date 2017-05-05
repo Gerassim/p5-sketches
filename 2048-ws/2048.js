@@ -8,6 +8,7 @@ socket.onmessage = function (ev) {
         for (let id in data.fields) {
             fields[id] = new Field(data.fields[id]);
         }
+        redraw();
     }
 
     if(data.playerId !== undefined) {
@@ -20,11 +21,11 @@ socket.onmessage = function (ev) {
 
     if(data.roomId !== undefined) {
         roomId = data.roomId;
-        console.log(roomId);
     }
 };
 
 function setup() {
+    noLoop();
     createCanvas(900, 400);
 }
 
