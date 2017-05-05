@@ -49,16 +49,12 @@ function draw() {
 function keyPressed() {
     if (keyCode === UP_ARROW) {
         socket.send('up')
-        // field.move(createVector(-1, 0));
     } else if (keyCode === DOWN_ARROW) {
         socket.send('down')
-        // field.move(createVector(1, 0));
     } else if (keyCode === LEFT_ARROW) {
         socket.send('left')
-        // field.move(createVector(0, -1));
     } else if (keyCode === RIGHT_ARROW) {
         socket.send('right')
-        // field.move(createVector(0, 1));
     }
 }
 
