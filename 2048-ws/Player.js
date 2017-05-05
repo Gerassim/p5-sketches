@@ -3,13 +3,18 @@
  */
 'use strict';
 const Field = require('./Field');
-
+const Vector = require('./Vector');
+const Moves = require('./Moves');
 
 class Player {
     constructor() {
         let date = new Date();
         this.id = date.getTime();
         this.field = new Field();
+    }
+
+    move(direction) {
+        return this.field.move(Moves.getMoves()[direction]);
     }
 }
 
