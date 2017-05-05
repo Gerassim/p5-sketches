@@ -5,15 +5,11 @@ const WebSocket = require('ws');
 const Field = require('./Field');
 const Vector = require('./Vector');
 const Rooms = require('./Rooms');
-// const Room = require('./Room');
 const Player = require('./Player');
 
 const wss = new WebSocket.Server({port: 8081});
 
 const rooms = new Rooms();
-
-playerCounter = 1;
-roomCounter = 1;
 
 wss.broadcast = function broadcast(data) {
     wss.clients.forEach(function each(client) {
@@ -26,10 +22,8 @@ wss.broadcast = function broadcast(data) {
 wss.broadcastToRoom = function broadcast(data, roomId) {
     wss.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN &&
-                client.room.id === roomId
-        )
-        {
-            console.log("Sending data to room " + roomId);
+            client.room.id === roomId
+        ) {
             client.send(data);
         }
     });
@@ -60,7 +54,7 @@ wss.on('connection', function connection(ws) {
                 moved = ws.player.field.move(new Vector(0, 1));
                 break;
         }
-        if(moved) {
+        if (moved) {
             let field = {};
             field[ws.player.id] = ws.player.field;
             let message = JSON.stringify({fields: field});
@@ -69,14 +63,9 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on("close", function close() {
-        console.log(ws.player.id + " disconnected");
         rooms.removePlayerFromRoom(ws.player);
 
-        // for(let i in rooms.rooms) {
-        //     console.log(rooms.rooms[i])
-        // }
-        // delete fields[ws.id];
-        let message = JSON.stringify({delete:ws.player.id});
+        let message = JSON.stringify({delete: ws.player.id});
         wss.broadcastToRoom(message, ws.room.id);
     });
 });

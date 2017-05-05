@@ -14,12 +14,10 @@ class Room {
     }
 
     addPlayer(player) {
-        console.log('Add player ' + player.id + ' to room ' + this.id);
         this.players[player.id] = player;
     }
 
     removePlayer(player) {
-        console.log('Remove player ' + player.id + ' from room ' + this.id);
         delete this.players[player.id];
     }
 
@@ -43,7 +41,7 @@ class Room {
 
     getFields() {
         let res = {};
-        for(let playerId in this.players) {
+        for (let playerId in this.players) {
             res[playerId] = this.players[playerId].field;
         }
 

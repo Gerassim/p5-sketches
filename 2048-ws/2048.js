@@ -4,9 +4,9 @@ let socket = new WebSocket("ws://node.dev:81");
 socket.onmessage = function (ev) {
     let data = JSON.parse(ev.data);
 
-    if(data.fields !== undefined) {
+    if (data.fields !== undefined) {
         for (let id in data.fields) {
-            if(fields[id] === undefined) {
+            if (fields[id] === undefined) {
                 fields[id] = new Field(data.fields[id]);
             } else {
                 fields[id].updateField(data.fields[id]);
@@ -15,15 +15,15 @@ socket.onmessage = function (ev) {
         redraw();
     }
 
-    if(data.playerId !== undefined) {
+    if (data.playerId !== undefined) {
         playerId = data.playerId;
     }
 
-    if(data.delete !== undefined) {
+    if (data.delete !== undefined) {
         delete fields[data.delete];
     }
 
-    if(data.roomId !== undefined) {
+    if (data.roomId !== undefined) {
         roomId = data.roomId;
     }
 };
@@ -36,8 +36,8 @@ function setup() {
 function draw() {
     background(51);
 
-    for(let i in fields) {
-        if(i == playerId) {
+    for (let i in fields) {
+        if (i == playerId) {
             fields[i].draw();
         } else {
             fields[i].draw(500);
@@ -63,7 +63,7 @@ function keyPressed() {
 
 function Field(object) {
     this.field = [];
-    console.log('Field create');
+
     this.fieldWidht = 400;
     this.fieldHeight = 400;
 
@@ -82,7 +82,7 @@ function Field(object) {
 
     this.draw = function (yOffset) {
 
-        if(yOffset === undefined) {
+        if (yOffset === undefined) {
             yOffset = 0;
         }
 
@@ -105,7 +105,7 @@ function Field(object) {
         }
     }
 
-    this.updateField = function(object) {
+    this.updateField = function (object) {
         for (let i = 0; i < object.field.length; i++) {
             this.field[i] = [];
             for (let j = 0; j < object.field[i].length; j++) {
