@@ -1,4 +1,4 @@
-let fields = {}, playerId, roomId, places = 3;
+let fields = {}, playerId, roomId;
 let socket = new WebSocket("ws://node.dev:81");
 
 socket.onmessage = function (ev) {
@@ -37,7 +37,7 @@ socket.onmessage = function (ev) {
 
 function setup() {
     noLoop();
-    createCanvas(1400, 500);
+    createCanvas(900, 500);
     button = createButton("Send");
     button.mousePressed(function () {
         socket.send(JSON.stringify({name: input.value()}))
