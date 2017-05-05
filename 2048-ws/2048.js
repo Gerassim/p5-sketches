@@ -72,8 +72,8 @@ function Field(object) {
     this.cols = object.cols;
     this.rows = object.rows;
 
-    this.cellWidth = 400 / this.cols;
-    this.cellHeight = 400 / this.rows;
+    this.cellWidth = this.fieldWidht / this.cols;
+    this.cellHeight = this.fieldHeight / this.rows;
 
     this.draw = function (yOffset) {
 
