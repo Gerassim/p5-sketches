@@ -10,7 +10,7 @@ socket.onmessage = function (ev) {
                 fields[id] = new Field(data.fields[id].field, id);
                 fields[id].name = data.fields[id].name;
             } else {
-                fields[id].updateField(data.fields[id]);
+                fields[id].updateField(data.fields[id].field);
             }
         }
         redraw();
@@ -129,11 +129,11 @@ function Field(object, id) {
     this.updateField = function (object) {
         console.log(object);
 
-        this.score = object.field.score;
-        for (let i = 0; i < object.field.field.length; i++) {
+        this.score = object.score;
+        for (let i = 0; i < object.field.length; i++) {
             this.field[i] = [];
-            for (let j = 0; j < object.field.field[i].length; j++) {
-                this.field[i][j] = new Cell(object.field.field[i][j]);
+            for (let j = 0; j < object.field[i].length; j++) {
+                this.field[i][j] = new Cell(object.field[i][j]);
             }
         }
         console.log(this)
