@@ -5,7 +5,7 @@
 
 class Room {
     constructor() {
-        this.limit = 3;
+        this.limit = 2;
         this.players = {};
         let date = new Date();
         this.id = date.getTime();

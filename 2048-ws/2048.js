@@ -1,4 +1,4 @@
-let fields = {}, playerId, roomId, places = 3;
+let fields = {}, playerId, roomId;
 let socket = new WebSocket("ws://node.dev:81");
 
 socket.onmessage = function (ev) {
@@ -10,7 +10,7 @@ socket.onmessage = function (ev) {
                 fields[id] = new Field(data.fields[id].field, id);
                 fields[id].name = data.fields[id].name;
             } else {
-                fields[id].updateField(data.fields[id]);
+                fields[id].updateField(data.fields[id].field);
             }
         }
         redraw();
@@ -136,6 +136,7 @@ function Field(object, id) {
                 this.field[i][j] = new Cell(object.field[i][j]);
             }
         }
+        console.log(this)
     }
 }
 
