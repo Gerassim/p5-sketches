@@ -50,6 +50,7 @@ class Ball {
         }
 
         //Reflect from field
+        /*TODO refactor here increase speed and quality of collision detection*/
         for (let i = 0; i < this.scene.field.rows; i++) {
             for (let j = 0; j < this.scene.field.cols; j++) {
                 let cell = this.scene.field.field[i][j];

@@ -8,6 +8,8 @@ function setup() {
     createCanvas(scene.width, scene.height);
 }
 
+/*TODO add score system*/
+/*TODO add different speed and angle when reflect from platform*/
 function draw() {
     if (keyIsDown(LEFT_ARROW)) {
         scene.platform.moveLeft();
