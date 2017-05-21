@@ -1,10 +1,10 @@
 version: "2"
 services:
-    node:
-        build: docker/node
-        volumes:
-            - ./:/app
-        working_dir: /app
-        ports:
-            - 80:8080
-            - 81:8081
+  node:
+    build: docker/node
+    volumes:
+      - ./:/app
+    working_dir: /app
+    ports:
+      - 80:8080
+      - 81:8081
