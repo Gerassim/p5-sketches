@@ -16,7 +16,11 @@ function draw() {
 }
 
 function keyPressed() {
-    maxDepth++;
+    if (keyCode === UP_ARROW) {
+        maxDepth++;
+    } else if(keyCode === DOWN_ARROW) {
+        maxDepth--;
+    }
 }
 
 function sierpinski(x1, y1, x2, y2, x3, y3, depth, h, s, b) {
