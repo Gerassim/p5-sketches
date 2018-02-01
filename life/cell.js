@@ -1,9 +1,28 @@
 class Cell {
+
+    constructor(x, y, w, alive = 0, grid, cellX, cellY) {
+        this.x = x;
+        this.y = y;
+        this.alive = alive;
+        this.w = w;
+        this.grid = grid;
+        this.cellX = cellX;
+        this.cellY = cellY;
+        this.redraw = true;
+        this.recalculate = true;
+
+        this.neighboursGrid = [
+            [-1, -1], [0, -1], [1, -1],
+            [-1, 0], [1, 0],
+            [-1, 1], [0, 1], [1, 1]
+        ];
+    }
+
     deadColor() {
-        return 50;
+        return 255;
     };
     aliveColor() {
-        return 200;
+        return 0;
     };
     getColor() {
         if (this.alive) {
@@ -14,19 +33,13 @@ class Cell {
     }
 
     getNeighboursSum() {
-        let neighboursGrid = [
-            [-1,-1], [0,-1], [1,-1],
-            [-1,0], [1,0],
-            [-1,1], [0,1], [1,1]
-        ];
         let aliveCount = 0;
-        
-        for (let delta of neighboursGrid) {
-            // console.log(this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]])
-            if(this.grid.grid[this.cellX + delta[0]] !== undefined) {
-                if(this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]] !== undefined){
-                    // console.log(this.cellX + delta[0], this.cellY + delta[1],this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]].alive)
-                    aliveCount += this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]].alive;  
+            // console.log(this.cellX, this.cellY);
+
+        for (let delta of this.neighboursGrid) {
+            if (this.grid.grid[this.cellX + delta[0]] !== undefined) {
+                if (this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]] !== undefined) {
+                    aliveCount += this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]].alive;
                 }
             }
         }
@@ -34,21 +47,24 @@ class Cell {
         return aliveCount;
     }
 
-    constructor(x, y, w, alive = 0, grid, cellX, cellY) {
-        this.x = x;
-        this.y = y;
-        this.alive = alive;
-        this.w = w;
-        this.grid = grid;
-        this.cellX = cellX;
-        this.cellY = cellY;
+    render() {
+        if (this.redraw) {
+            noStroke();
+            fill(this.getColor());
+            rect(this.x, this.y, this.w, this.w);
+            fill(0); textAlign(CENTER, CENTER);
+            this.changed = false;
+            // text(this.cellX.toString() + ', ' + this.cellY.toString(), this.x, this.y, this.w, this.w)
+        }
     }
 
-    render() {
-        noStroke();
-        fill(this.getColor());
-        rect(this.x, this.y, this.w, this.w);
-        fill(0); textAlign(CENTER, CENTER)
-        // text(this.cellX.toString() + ', ' + this.cellY.toString(), this.x, this.y, this.w, this.w)
+    setNeighboursRecalculate() {
+        for (let delta of this.neighboursGrid) {
+            if (this.grid.grid[this.cellX + delta[0]] !== undefined) {
+                if (this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]] !== undefined) {
+                    this.grid.grid[this.cellX + delta[0]][this.cellY + delta[1]].recalculate = true;
+                }
+            }
+        }
     }
 }
