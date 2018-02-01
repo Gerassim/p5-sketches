@@ -2,7 +2,7 @@ let grid = new Grid;
 
 function setup() {
     createCanvas(grid.width, grid.height);
-    frameRate(5)
+    // frameRate(5)
 }
 
 function draw() {
