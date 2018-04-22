@@ -10,6 +10,7 @@ class Scene {
     this.bird = new Bird(this);
     this.isGameRunning = true;
     this.generateInitialWalls();
+    this.score = 0;
   }
 
   draw() {
@@ -21,6 +22,7 @@ class Scene {
     this.generateInitialWalls();
     this.isGameRunning = true;
     this.bird.reset();
+    this.score = 0;
   }
 
   generateInitialWalls() {
@@ -31,7 +33,7 @@ class Scene {
   }
 
   update() {
-    this.walls.update();
+    this.drawScore();
     if (this.bird.y > height || this.walls.getFirstWall().collision(this.bird)) {
       noLoop();
       this.isGameRunning = false;
@@ -39,9 +41,17 @@ class Scene {
       textSize(32);
       // rectMode(CENTER);
       textAlign(CENTER, CENTER);
-      text('Game Over', this.width / 2, this.height / 2);
+      text('Score ' + this.score, this.width / 2, this.height / 2);
       text('Press space to retry', this.width / 2, this.height / 2 + 50);
     }
+    this.walls.update();
     this.bird.update();
+  }
+
+  drawScore() {
+    fill('#000');
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text(this.score, 50 , 50);
   }
 }

@@ -7,6 +7,7 @@ class Wall {
     this.verticalGap = 100;
     this.gapPosition = random(this.verticalGap, scene.height - this.verticalGap);
     this.scene = scene;
+    this.scored = false;
   }
 
   draw() {
@@ -35,9 +36,16 @@ class Wall {
   }
 
   collision(bird) {
-    if (Bird.x > this.getBeginX() && Bird.x < this.getEndX()) {
-      // bird.color = Bird.inPipeColor;
-      if (bird.y + Bird.d / 2 > this.getDownGapY() || bird.y - Bird.d / 2 < this.getUpGapY()) {
+    if(Bird.x > this.getEndX()) {
+      if(!this.scored) {
+        this.scored = true;
+        this.scene.score++;
+      }
+    }
+
+    if (Bird.x + Bird.w / 2 > this.getBeginX() && Bird.x - Bird.w / 2 < this.getEndX()) {
+      bird.color = Bird.inPipeColor;
+      if (bird.y + Bird.h / 2 > this.getDownGapY() || bird.y - Bird.h / 2 < this.getUpGapY()) {
         bird.color = Bird.collisionColor;
         return true;
       }
