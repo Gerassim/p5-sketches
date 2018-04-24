@@ -11,5 +11,7 @@ function draw() {
 
 function mousePressed() {
   let cell = field.getCellByCoordinates(mouseX, mouseY);
-  cell.open();
+  if(cell) {
+    cell.open();
+  }
 }

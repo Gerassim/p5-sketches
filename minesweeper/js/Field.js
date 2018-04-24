@@ -21,8 +21,11 @@ class Field {
   getCellByCoordinates(x, y) {
     let i = Math.floor(x / Field.cellSize);
     let j = Math.floor(y / Field.cellSize);
-
-    return this.cells[j][i];
+    if(this.cells[j] && this.cells[j][i]) {
+      return this.cells[j][i];
+    } else {
+      return undefined;
+    }
   }
 
   draw() {
