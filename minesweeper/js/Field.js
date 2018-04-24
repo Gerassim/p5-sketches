@@ -42,7 +42,6 @@ class Field {
     let neighbours = this.getCellNeighbours(cell);
 
     if(neighbours.filter( cell => cell.isFlagged).length === neighbours.filter( cell => cell.isMine).length) {
-      console.log('asdasd')
       neighbours.filter( cell => !cell.isOpened).forEach( cell => cell.open())
     }
   }
