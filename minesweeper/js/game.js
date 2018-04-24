@@ -2,7 +2,7 @@ let field;
 
 function setup() {
   field = new Field();
-  createCanvas(Field.width, Field.height);
+  createCanvas(Field.width + 1, Field.height + 1);
 }
 
 function draw() {
@@ -10,8 +10,10 @@ function draw() {
 }
 
 function mousePressed() {
-  let cell = field.getCellByCoordinates(mouseX, mouseY);
-  if(cell) {
-    cell.open();
+  if(!field.isGameOver) {
+    let cell = field.getCellByCoordinates(mouseX, mouseY);
+    if(cell) {
+      cell.open();
+    }
   }
 }
