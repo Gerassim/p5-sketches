@@ -10,6 +10,14 @@ function draw() {
   field.draw();
 }
 
+function doubleClicked() {
+  if(!field.isGameOver) {
+    let cell = field.getCellByCoordinates(mouseX, mouseY);
+
+    field.openIfAllBombsFlagged(cell)
+  }
+}
+
 function mousePressed() {
   if(!field.isGameOver) {
     let cell = field.getCellByCoordinates(mouseX, mouseY);

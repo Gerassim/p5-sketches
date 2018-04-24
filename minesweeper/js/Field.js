@@ -1,7 +1,7 @@
 class Field {
-  static get rows() { return 20 }
-  static get cols() { return 20 }
-  static get cellSize() { return 30 }
+  static get rows() { return 30 }
+  static get cols() { return 30 }
+  static get cellSize() { return 20 }
   static get width() { return this.cols * this.cellSize }
   static get height() { return this.rows * this.cellSize }
 
@@ -36,6 +36,15 @@ class Field {
         cell.setMinesAround(minesAround);
       })
     });
+  }
+
+  openIfAllBombsFlagged(cell) {
+    let neighbours = this.getCellNeighbours(cell);
+
+    if(neighbours.filter( cell => cell.isFlagged).length === neighbours.filter( cell => cell.isMine).length) {
+      console.log('asdasd')
+      neighbours.filter( cell => !cell.isOpened).forEach( cell => cell.open())
+    }
   }
 
   getCellNeighbours(cell) {
@@ -74,7 +83,7 @@ class Field {
     if(this.isGameOver) {
       textAlign(CENTER, CENTER);
       fill('#ff0000');
-      textSize(32);
+      textSize(48);
       text(this.gameMessage, Field.width / 2, Field.height / 2);
     }
   }

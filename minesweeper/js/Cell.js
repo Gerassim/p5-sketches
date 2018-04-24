@@ -73,7 +73,7 @@ class Cell {
   }
 
   draw() {
-    textSize(32);
+    textSize(18);
     if (this.isOpened) {
       if (this.isMine) {
         fill(this.bgColor.mine);
