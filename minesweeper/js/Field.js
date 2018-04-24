@@ -8,6 +8,8 @@ class Field {
   constructor() {
     this.cells = [];
     this.isGameOver = false;
+    this.mines = 0;
+    this.gameMessage = 'GAME OVER';
 
     for(let i = 0; i < Field.rows; i++) {
       let row = [];
@@ -18,9 +20,13 @@ class Field {
       this.cells.push(row);
     }
 
-    for(let i = 0; i < Field.rows; i++) {
-      for (let j = 0; j < Field.cols; j++) {
-        let cell = this.cells[j][i], neighbours = this.getCellNeighbours(cell), minesAround = 0;
+    this.cells.forEach( row => {
+      row.forEach( cell => {
+        if(cell.isMine) {
+          this.mines++;
+        }
+
+        let neighbours = this.getCellNeighbours(cell), minesAround = 0;
 
         for (let neighborCell of neighbours) {
           if(neighborCell.isMine) {
@@ -28,8 +34,8 @@ class Field {
           }
         }
         cell.setMinesAround(minesAround);
-      }
-    }
+      })
+    });
   }
 
   getCellNeighbours(cell) {
@@ -63,17 +69,13 @@ class Field {
   }
 
   draw() {
-    for (let row of this.cells) {
-      for(let cell of row) {
-        cell.draw();
-      }
-    }
+    this.cells.forEach( row => row.forEach( cell => cell.draw()));
 
     if(this.isGameOver) {
       textAlign(CENTER, CENTER);
       fill('#ff0000');
       textSize(32);
-      text('GAME OVER', Field.width / 2, Field.height / 2);
+      text(this.gameMessage, Field.width / 2, Field.height / 2);
     }
   }
 }

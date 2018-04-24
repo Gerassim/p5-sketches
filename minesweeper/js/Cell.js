@@ -4,10 +4,17 @@ class Cell {
     this.y = y;
     this.i = i;
     this.j = j;
+    
+    this.isFlagged = false;
+    this.isMine = random() > 0.9;
+    this.isOpened = false;
 
-    this.closedColor = '#fff';
-    this.mineColor = '#ff0000';
-    this.emptyColor = '#808389';
+    this.bgColor = {
+      'closed': '#fff',
+      'mine' : '#ff0000',
+      'empty' : '#808389',
+      'flagged' : '#ed4eda',
+    };
 
     this.textColor = [
       '#0e00f9',
@@ -21,23 +28,43 @@ class Cell {
     ];
 
     this.field = field;
-    this.isMine = random() > 0.9;
-    this.isOpened = false;
+  }
+
+  flag() {
+    this.isFlagged = !this.isFlagged;
   }
 
   open() {
+    if(this.isFlagged) {
+      return;
+    }
+
     this.isOpened = true;
 
     if(this.isMine) {
       this.field.isGameOver = true;
+      return;
+    }
+
+    let placesToOpen = 0;
+
+    this.field.cells.forEach( row => {
+      row.forEach( cell => {
+        if(!cell.isOpened) {
+          placesToOpen++;
+        }
+      })
+    });
+
+    if(placesToOpen === this.field.mines) {
+      this.field.isGameOver = true;
+      this.field.gameMessage = 'YOU WIN';
+      return;
     }
 
     if(this.minesAround === 0 && !this.isMine) {
       let neighbours = this.field.getCellNeighbours(this);
-
-      for(let neighbourCell of neighbours.filter( cell => !cell.isOpened && !cell.isMine)) {
-        neighbourCell.open()
-      }
+      neighbours.filter( cell => !cell.isOpened && !cell.isMine).forEach( cell => cell.open() )
     }
   }
 
@@ -49,10 +76,10 @@ class Cell {
     textSize(32);
     if (this.isOpened) {
       if (this.isMine) {
-        fill(this.mineColor);
+        fill(this.bgColor.mine);
         rect(this.x, this.y, Field.cellSize, Field.cellSize);
       } else {
-        fill(this.emptyColor);
+        fill(this.bgColor.empty);
         rect(this.x, this.y, Field.cellSize, Field.cellSize);
         if(this.minesAround > 0) {
           fill(this.textColor[this.minesAround - 1]);
@@ -61,7 +88,11 @@ class Cell {
         }
       }
     } else {
-      fill(this.closedColor);
+      if(this.isFlagged) {
+        fill(this.bgColor.flagged);
+      } else {
+        fill(this.bgColor.closed);
+      }
       rect(this.x, this.y, Field.cellSize, Field.cellSize);
     }
   }
