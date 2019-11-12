@@ -2,3 +2,5 @@
 .idea/
 p5.js
 .vscode/
+/raycasting/node_modules/
+/node_modules

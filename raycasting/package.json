@@ -1,0 +1,20 @@
+{
+  "name": "raycasting",
+  "version": "0.0.1",
+  "description": "Basic ray casting with webpack",
+  "private": true,
+  "author": "Oleksii Herashchenko",
+  "license": "MIT",
+  "devDependencies": {
+    "p5": "^0.10.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npx webpack --watch --mode=development"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}
