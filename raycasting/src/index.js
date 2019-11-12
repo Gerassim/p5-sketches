@@ -10,10 +10,10 @@ new P5((p5) => {
   boundaries.push(new Boundary(width, 0, width, height, p5));
   boundaries.push(new Boundary(width, height, 0, height, p5));
   boundaries.push(new Boundary(0, height, 0, 0, p5));
-  for(let i = 0; i<7; i++) {
+  for (let i = 0; i < 7; i++) {
     boundaries.push(new Boundary(p5.random(width), p5.random(height), p5.random(width), p5.random(height), p5));
   }
-  const dot = new Dot(width/2, height/2, p5);
+  const dot = new Dot(width / 2, height / 2, p5);
 
   p5.setup = () => {
     p5.createCanvas(width, height);
@@ -21,12 +21,25 @@ new P5((p5) => {
 
   p5.draw = () => {
     p5.background(51);
-    for(let boundary of boundaries) {
+    dot.handleMove();
+    for (let boundary of boundaries) {
       boundary.draw();
     }
-
-    dot.draw();
     dot.cast(boundaries);
-    dot.move(p5.mouseX, p5.mouseY);
+    dot.draw();
   };
+
+  p5.keyPressed = () => {
+    switch (p5.keyCode) {
+      case 49:
+        dot.mode = Dot.MODE_SHOW_RAY;
+        break;
+      case 50:
+        dot.mode = Dot.MODE_SHOW_DOT;
+        break;
+      case 51:
+        boundaries.forEach(boundary => boundary.mode = boundary.mode === Boundary.MODE_SHOW ? Boundary.MODE_HIDE : Boundary.MODE_SHOW);
+        break;
+    }
+  }
 });
