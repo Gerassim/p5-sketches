@@ -11,14 +11,13 @@ new P5((p5) => {
   boundaries.push(new Boundary(width, 0, width, height, p5));
   boundaries.push(new Boundary(width, height, 0, height, p5));
   boundaries.push(new Boundary(0, height, 0, 0, p5));
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 15; i++) {
     boundaries.push(new Boundary(p5.random(width), p5.random(height), p5.random(width), p5.random(height), p5));
   }
   const dot = new Dot(width / 2, height / 2, p5);
 
   p5.setup = () => {
     p5.createCanvas(width, height);
-    // p5.frameRate(1);
   };
 
   p5.draw = () => {

@@ -24,7 +24,7 @@ class Ray {
     this.pos.y = y;
   }
 
-  cast(boundaries, color) {
+  cast(boundaries) {
     const {pos} = this;
     let closestPoint = null;
     let minDist = Infinity;
@@ -42,7 +42,7 @@ class Ray {
     }
 
     if (closestPoint) {
-      this.draw(closestPoint, color);
+      // this.draw(closestPoint, color);
     }
 
     return closestPoint;

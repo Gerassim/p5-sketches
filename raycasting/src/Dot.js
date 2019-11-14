@@ -1,6 +1,5 @@
 import Ray from "./Ray";
 import {Vector} from "p5";
-import Boundary from "./Boundary";
 
 class Dot {
   constructor(x, y, p5) {
@@ -19,49 +18,48 @@ class Dot {
   }
 
   cast(boundaries) {
-    const {ray, pos, rotateIncrement, fov, viewDirection, p5} = this;
-    const beginFow = viewDirection.copy().rotate(-fov/2);
-    const endFow = viewDirection.copy().rotate(fov/2);
-    const lightShape = [];
-    const fow = [beginFow, endFow];
+    const {ray, pos, fov, viewDirection, p5} = this;
+    const beginFow = viewDirection.copy().rotate(-fov / 2);
+    const endFow = viewDirection.copy().rotate(fov / 2);
 
-    lightShape.push(pos);
-    fow.forEach((direction) => {
-      ray.setDirection(direction);
-      const point = ray.cast(boundaries, 150);
-      if(point) {
-        lightShape.push(point);
-      }
-    });
+    const rays = [
+      beginFow,
+      endFow,
+      ...boundaries[0]
+        .getBorderIntersectionPoints(boundaries)
+        .map(point => point.copy().sub(pos))
+        .filter(direction => beginFow.angleBetween(direction) > 0 && endFow.angleBetween(direction) < 0)
+    ];
 
-
-    for (const boundary of boundaries) {
+    boundaries.forEach(boundary => {
       const directions = [boundary.a.copy().sub(pos), boundary.b.copy().sub(pos)];
       directions.forEach((direction) => {
-        if(
+        if (
           beginFow.angleBetween(direction) > 0 &&
           endFow.angleBetween(direction) < 0
         ) {
-          ray.setDirection(direction.copy().rotate(-0.0001));
-          const point = ray.cast(boundaries);
-          if(point) {
-            p5.vertex(point.x, point.y);
-            lightShape.push(point);
-          }
-          ray.setDirection(direction.copy().rotate(0.0001));
-          const point2 = ray.cast(boundaries);
-          if(point2) {
-            p5.vertex(point2.x, point2.y);
-            lightShape.push(point2);
-          }
+          rays.push(direction.copy().rotate(-0.0001));
+          rays.push(direction.copy().rotate(0.0001));
         }
       });
-    }
+    });
+
+    const lightShape = [pos, ...rays.map(direction => {
+      ray.setDirection(direction);
+      const point = ray.cast(boundaries);
+      if (point) {
+        p5.vertex(point.x, point.y);
+        return point;
+      }
+    })];
+
     p5.beginShape();
+    p5.noStroke();
     p5.fill('rgba(0,255,0, 0.25)');
     lightShape
-      .sort((a, b) => b.copy().sub(pos).angleBetween(a.copy().sub(pos))> 0 ? 1 : -1)
-      .forEach((point,i) => {
+      .sort((a, b) => b.copy().sub(pos).angleBetween(a.copy().sub(pos)) > 0 ? 1 : -1)
+      .filter(v => !!v)
+      .forEach((point) => {
         p5.vertex(point.x, point.y);
       });
     p5.endShape(p5.CLOSE);

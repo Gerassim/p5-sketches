@@ -6,7 +6,7 @@ class Boundary {
     this.a = p5.createVector(x1, y1);
     this.b = p5.createVector(x2, y2);
     this.p5 = p5;
-    this.mode = Boundary.MODE_SHOW;
+    this.mode = Boundary.MODE_HIDE;
   }
 
   draw() {
@@ -53,7 +53,6 @@ class Boundary {
         }
       }
     }
-    // console.log(points);
     return points;
   }
 }
