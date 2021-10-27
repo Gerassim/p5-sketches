@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from "./features/counter";
+import sudokuReducer from "./features/sudoku/sudoku";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer
+    counter: counterReducer,
+    sudoku: sudokuReducer,
   },
 })
 

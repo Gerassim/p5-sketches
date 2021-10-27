@@ -1,34 +1,13 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "./store";
-import {decrement, increment,incrementByAmount} from "./features/counter";
+import "./styles/main.css";
+import Board from "./components/board";
 
 const App = () => {
-  const count = useSelector((state: RootState) => state.counter.value);
-  const dispatch = useDispatch();
+
   return (
-    <div>
-      <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          Increment
-        </button>
-        <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          Decrement
-        </button>
-        <button
-          aria-label="Increment by 10"
-          onClick={() => dispatch(incrementByAmount(10))}
-        >
-          Increment by 10
-        </button>
-      </div>
+    <div className="container">
+      <h1>Sudoku</h1>
+      <Board />
     </div>
   )
 }
